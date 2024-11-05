@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#wish").click(function(){
+		/*
+		$.ajax({
+			type : "post", 
+			url : "../wishItem",
+			data : {"goodsNum":"[[${dto.goodsDTO.goodsNum }]]"},
+			success:function(){
+				if($("#wish").attr("src") == "/static/images/hart1.jpg"){
+					$("#wish").attr("src","/static/images/hart.jpg");
+				}else{
+					$("#wish").attr("src","/static/images/hart1.jpg");
+				}
+			},
+			error:function(){
+				alert('로그인 아웃 되었습니다.\n다시 로그인 해 주세요.');
+				location.href="/";
+				return false;
+			}
+		});
+		*/
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", "../wishItem",true);
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.onload = function(){
+			if (xhr.status == 200) { // 정상적으로 처리 되었을 때 가져오는 값 200
+				if($("#wish").attr("src") == "/static/images/hart1.jpg"){
+					$("#wish").attr("src","/static/images/hart.jpg");
+				}else{
+					$("#wish").attr("src","/static/images/hart1.jpg");
+				}
+			}else{
+				alert('로그인 아웃 되었습니다.\n다시 로그인 해 주세요.');
+				location.href="/";
+				return false;
+			}
+		}
+		var formData = JSON.stringify({
+			"goodsNum":"[[${dto.goodsDTO.goodsNum }]]"
+		})
+		xhr.send(formData);
+	});
+	$("#cartBtn").click(function(){
+		//document.getElementById("cartBtn").addEventListener("click", function(){
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/item/cartAdd", true);
+			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.onload = function(){
+				if (xhr.status === 200) {
+					if(xhr.responseText == "200"){
+							if(confirm("계속 쇼핑하려면 '취소'를 클릭하세요."))
+									location.href="/item/cartList";
+					}else if(xhr.responseText == "900"){
+							alert("관리자는 사용할 수 없는 페이지입니다.");
+					}else if(xhr.responseText == "000"){
+							alert("로그 아웃되었습니다. 다시로그인 해주세요.");
+							window.open("/login/item.login","login"
+									,"width=315, height=200,top = 100, left=100"); 
+					}
+				}else{
+						alert("로그 아웃되었습니다. 다시로그인 해주세요.");
+						window.open("/login/item.login","login"
+								,"width=315, height=200,top = 100, left=100"); 
+				}
+			}
+			var formData = JSON.stringify({
+				goodsNum: "[[${dto.goodsDTO.goodsNum}]]",
+				qty : $("#cartQty").val()
+			})
+			xhr.send(formData);
+		});
+});
+</script>
+</head>
+<body>
+<table width="800" align="center">
+<caption>[[${dto.goodsDTO.goodsName }]] 상품정보입니다.</caption>
+<tr><td rowspan="5"><img th:src="|/static/upload/${dto.goodsDTO.goodsMainStoreImage }|" height="200" width="200" /></td>
+					<td>[[${dto.goodsDTO.goodsName }]]</td></tr>
+<tr>                <td>[[${dto.goodsDTO.goodsPrice }]]</td></tr>
+<tr>                <td>들여다본 수 : [[${dto.goodsDTO.visitCount }]]</td>
+<tr>                <td>수량 : <input type="number" min="1" step="1" value="1" id="cartQty"/> </td></tr>
+<tr>                <td>
+					<th:block th:if="${dto.stock != 0 and dto.stock != null}">	
+						<button type="button" id="cartBtn">장바구니</button> | 
+ 						<button type="button" id="buyItem">바로구매 </button> |
+ 					</th:block>	 
+ 					<th:block th:if="${dto.stock == 0 or dto.stock == null}">	
+ 						품절입니다. 곧 입고될 예정입니다.
+ 					</th:block>
+					<img src="/static/images/hart1.jpg" id="wish" width="20"/>찜</td></tr>
+<tr><td colspan="2">
+		<span id="descript">제품 상세 설명</span> | 
+		<span id="review">리뷰</span> | 
+		<span id="inquire" onclick="inquire();">상품문의</span>
+	</td></tr>
+<tr><td colspan="2"><div id="content"></div></td></tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+$(function(){
+	$("#btn").click(function(){
+		///form에 있는 데이터를 가져오기
+		var formData = new FormData($("#frm")[0]);
+		$.ajax({
+			type:"post",
+			url:"goodsWrite", 
+			data: formData,
+			enctype:"multipart/form-data",
+			contentType : false,
+			processData : false,
+			success:function(result){
+				if(result == 200){
+					location.href="goodsList";
+				}else{
+					$("#writeForm").html(result);
+				}
+			},
+			error:function(){
+				alert("로그인을 다시 시도해 주세요.");
+				location.href="/";
+			}
+		});
+	});
+});	
+</script>
+</head>
+<body>
+<!-- 파일을 전송하려면 enctype="multipart/form-data"로 지정해 주어야 합니다. method="post"-->
+<form action="goodsWrite" method="post" id="frm" th:object="${goodsCommand}"  >
+	<table border = "1" width ="600" align="center">
+		<tr><th width="100">상품번호</th>
+			<td><input type="text" name="goodsNum" th:value="${goodsCommand.goodsNum}" readonly="readonly"/>자동부여</td></tr>
+		<tr><th>상품명</th>
+			<td><input type="text" name="goodsName"  th:value="${goodsCommand.goodsName}" /><br />
+		<span style="color:red" th:if="${#fields.hasErrors('goodsName')}" th:errors="*{goodsName}"></span></td></tr>
+		<tr><th>상품가격</th>
+			<td><input type="number" name="goodsPrice" min="0" th:field="*{goodsPrice}" /><br />
+		<span style="color:red" th:if="${#fields.hasErrors('goodsPrice')}" th:errors="*{goodsPrice}"></span></td></tr>
+		<tr><th>상품설명</th>
+			<td><textarea rows="10" cols="50" name="goodsContents" >[[${goodsCommand.goodsContents}]]</textarea><br />
+		<span style="color:red" th:if="${#fields.hasErrors('goodsContents')}" th:errors="*{goodsContents}"></span></td></tr>
+		<tr><th>대문이미지</th>
+			<td><input type="file" name="goodsMainImage" /></td>
+		</tr>
+		<tr>
+			<th>이미지</th>
+			<td><input type="file" name="goodsDetailImage" multiple="multiple"/></td>
+		</tr>
+		<tr><th colspan="2">
+		<!-- <input type="submit" id="btn" value="상품 등록" /> -->
+		<input type="button" id="btn" value="상품 등록" /></th></tr>
+	</table>
+</form>
+</body>
+</html>
