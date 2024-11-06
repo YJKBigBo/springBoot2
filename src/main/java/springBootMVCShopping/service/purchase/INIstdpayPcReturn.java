@@ -3,13 +3,21 @@ import com.inicis.std.util.HttpUtil;
 import com.inicis.std.util.ParseUtil;
 import com.inicis.std.util.SignatureUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import springBootMVCShopping.domain.PaymentDTO;
+import springBootMVCShopping.repository.PurchaseRepository;
 
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+@Service
 public class INIstdpayPcReturn {
+    @Autowired
+    PurchaseRepository purchaseRepository;
+
     public void execute(HttpServletRequest request){
         Map<String, String> resultMap = new HashMap<String, String>();
 
@@ -101,19 +109,18 @@ public class INIstdpayPcReturn {
                     // 수신결과를 파싱후 resultCode가 "0000"이면 승인성공 이외 실패
 
                     //throw new Exception("강제 Exception");
-//                    PaymentDTO dto = new PaymentDTO();
-//                    dto.setApplDate(resultMap.get("applDate"));
-//                    dto.setApplTime(resultMap.get("applTime"));
-//                    dto.setCardNum(resultMap.get("CARD_Num"));
-//                    dto.setConfirmNumber(resultMap.get("applNum"));
-//                    dto.setPayMethod(resultMap.get("payMethod"));
-//                    dto.setPurchaseNum(resultMap.get("MOID"));
-//                    dto.setResultMessage(resultMap.get("resultMsg"));
-//                    dto.setTid(resultMap.get("tid"));
-//                    dto.setTotalPrice(resultMap.get("TotPrice"));
-//                    dto.setPurchaseName(resultMap.get("goodsName"));
-//                    ItemDAO dao = new ItemDAO();
-//                    dao.paymentInsert(dto);
+                    PaymentDTO dto = new PaymentDTO();
+                    dto.setAppldate(resultMap.get("applDate"));
+                    dto.setAppltime(resultMap.get("applTime"));
+                    dto.setCardnum(resultMap.get("CARD_Num"));
+                    dto.setConfirmnumber(resultMap.get("applNum"));
+                    dto.setPaymathod(resultMap.get("payMethod"));
+                    dto.setPurchaseNum(resultMap.get("MOID"));
+                    dto.setResultmassage(resultMap.get("resultMsg"));
+                    dto.setTid(resultMap.get("tid"));
+                    dto.setTotalprice(resultMap.get("TotPrice"));
+                    System.out.println("주문번호 : " + dto.getPurchaseNum());
+                    purchaseRepository.paymentInsert(dto);
 
                 } catch (Exception ex) {
 

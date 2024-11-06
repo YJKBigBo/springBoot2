@@ -1,5 +1,6 @@
 package springBootMVCShopping.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 import springBootMVCShopping.command.PurchaseCommand;
-import springBootMVCShopping.service.purchase.GoodsBuyService;
-import springBootMVCShopping.service.purchase.GoodsOrderService;
-import springBootMVCShopping.service.purchase.IniPayReqService;
-import springBootMVCShopping.service.purchase.OrderProcessListService;
+import springBootMVCShopping.service.purchase.*;
 
 @Controller
 @RequestMapping("purchase")
@@ -26,6 +24,9 @@ public class PurchaseController {
 
 	@Autowired
 	IniPayReqService iniPayReqService;
+
+	@Autowired
+	INIstdpayPcReturn iNIstdpayPcReturn;
 
 	@PostMapping("goodsBuy")
 	public String goodsBuy(String nums[] , HttpSession session,Model model) {
@@ -48,6 +49,16 @@ public class PurchaseController {
             e.printStackTrace();
         }
         return "thymeleaf/purchase/payment";
+	}
+
+	@RequestMapping("INIstdpay_pc_return")
+	public String payReturn(HttpServletRequest request) {
+		iNIstdpayPcReturn.execute(request);
+		return "thymeleaf/purchase/buyFinished";
+	}
+	@RequestMapping("close")
+	public String close(){
+		return "thymeleaf/purchase/close";
 	}
 
 	@GetMapping("orderList")

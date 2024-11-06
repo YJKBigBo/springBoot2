@@ -81,5 +81,12 @@
 		select <include refid="purchaseBaseColumns"></include> from purchase where purchase_num = #{purchaseNum}
 	</select>
 
+	<insert id="paymentInsert" parameterType="payment">
+		insert into payment(PURCHASE_NUM,CONFIRMNUMBER,CARDNUM,TID,TOTALPRICE,RESULTMASSAGE,PAYMATHOD
+						   ,APPLDATE,APPTIME)
+		values(#{purchaseNum},#{confirmnumber},#{cardnum},#{tid},#{totalprice},#{resultmassage}
+			  ,#{paymathod},#{appldate},#{appltime})
+	</insert>
+
 </mapper>
 
