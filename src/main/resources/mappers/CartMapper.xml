@@ -63,16 +63,14 @@
 
 
 <update id="cartMerge" parameterType="cart">
-merge into cart c	
-using (select goods_num from goods where goods_num = #{goodsNum}) g	
-on (c.goods_num = g.goods_num and MEMBER_NUM = #{memberNum})	
-WHEN MATCHED THEN	
-	update set CART_QTY = CART_QTY + #{cartQty}	
-WHEN NOT MATCHED THEN	
-	insert (cart_NUM
-			, MEMBER_NUM,GOODS_NUM,CART_DATE, CART_QTY)
-	values ((select nvl(max(cart_num ),0) + 1  from cart)
-			,#{memberNum}, #{goodsNum}, sysdate, #{cartQty})
+	merge into cart c
+		using (select goods_num from goods where goods_num = #{goodsNum}) g
+		on (c.goods_num = g.goods_num and MEMBER_NUM = #{memberNum})
+		WHEN MATCHED THEN
+			update set CART_QTY = CART_QTY + #{cartQty}
+		WHEN NOT MATCHED THEN
+			insert (MEMBER_NUM, GOODS_NUM, CART_DATE, CART_QTY)
+				values (#{memberNum}, #{goodsNum}, sysdate, #{cartQty})
 </update>
 
 <update id="cartQtyDown" >
