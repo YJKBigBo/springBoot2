@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @Alias("purchaseListGoods")
 public class PurchaseListGoodsDTO {
-	PurchaseListDTO purchaseList;
-	GoodsDTO goods;
+	PurchaseListDTO purchaseListDTO;
+	GoodsDTO goodsDTO;
 }

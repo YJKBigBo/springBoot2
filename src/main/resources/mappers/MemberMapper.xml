@@ -6,7 +6,7 @@
 <insert id="memberInsert" parameterType="memberDTO">
 	insert into members(MEMBER_NUM, MEMBER_NAME, MEMBER_ID, MEMBER_PW
 	                   , MEMBER_ADDR, MEMBER_ADDR_DETAIL, MEMBER_POST
-	                   , MEMBER_REGIST, GENDER,MEMBER_PHONE1
+	                   , MEMBER_REGIST, MEMBER_GENDER,MEMBER_PHONE1
 	                   <if test="memberPhone2 != null">
 	                   , MEMBER_PHONE2
 	                   </if>
@@ -22,7 +22,7 @@
 <sql id="memberBaseColumns">
 		MEMBER_NUM, MEMBER_NAME, MEMBER_ID, MEMBER_PW
 	  , MEMBER_ADDR, MEMBER_ADDR_DETAIL, MEMBER_POST
-	  , MEMBER_REGIST, GENDER,MEMBER_PHONE1, MEMBER_PHONE2
+	  , MEMBER_REGIST, MEMBER_GENDER,MEMBER_PHONE1, MEMBER_PHONE2
 	  , MEMBER_EMAIL, MEMBER_BIRTH, MEMBER_POINT, MEMBER_EMAIL_CONFIRM
 </sql>
 
@@ -61,7 +61,7 @@ where rn BETWEEN #{startRow} and #{endRow}
 		member_Addr_Detail = null,
 		</if>
 		member_Post = #{memberPost},
-		gender = #{gender},
+		MEMBER_GENDER = #{gender},
 		member_Phone1 = #{memberPhone1},
 		member_Email = #{memberEmail},
 		member_Birth = #{memberBirth},

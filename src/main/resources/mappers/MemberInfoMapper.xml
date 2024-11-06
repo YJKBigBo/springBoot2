@@ -7,7 +7,7 @@
 	select MEMBER_NUM as memberNum, MEMBER_NAME as memberName, MEMBER_ID as memberId
 	      , MEMBER_PW as memberPw,MEMBER_ADDR as memberAddr
 	      , MEMBER_ADDR_DETAIL as memberAddrDetail, MEMBER_POST as memberPost
-	      , MEMBER_REGIST as memberRegist, GENDER , MEMBER_PHONE1 as memberPhone1
+	      , MEMBER_REGIST as memberRegist, MEMBER_GENDER , MEMBER_PHONE1 as memberPhone1
 	      , MEMBER_PHONE2 as memberPhone2 
 	      ,MEMBER_EMAIL as memberEmail, MEMBER_BIRTH as memberBirth
 	from members
@@ -20,7 +20,7 @@
 		,MEMBER_ADDR = #{memberAddr}
 		,MEMBER_ADDR_DETAIL = #{memberAddrDetail}
 		,MEMBER_POST = #{memberPost}
-		,GENDER = #{gender}
+		,MEMBER_GENDER = #{gender}
 		,MEMBER_PHONE1 = #{memberPhone1}
 		,MEMBER_PHONE2 = #{memberPhone2}
 		,MEMBER_EMAIL = #{memberEmail}

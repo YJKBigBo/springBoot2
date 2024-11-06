@@ -1,41 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC
-        "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		"-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="purchaseRepositorySql">
-<sql id="purchaseBaseColumns">
-  PURCHASE_NUM, PURCHASE_DATE, PURCHASE_PRICE, DELIVERY_ADDR, DELIVERY_ADDR_DETAIL
+	<sql id="purchaseBaseColumns">
+		PURCHASE_NUM, PURCHASE_DATE, PURCHASE_PRICE, DELIVERY_ADDR, DELIVERY_ADDR_DETAIL
 , DELIVERY_POST, DELIVERY_PHONE, MESSAGE, PURCHASE_STATUS, MEMBER_NUM, DELIVERY_NAME
 , PURCHASE_NAME
-</sql>
-<select id="selectPurchaseNum" resultType="string">
-select concat(to_char(sysdate,'yyyyMMdd') , nvl(max(substr(purchase_num,9)),0 ) +1)
-from purchase
-where substr(purchase_num,1 ,8) = to_char(sysdate,'yyyyMMdd')
-</select>
-<insert id="purchaseInsert" parameterType="purchase" >
-insert into purchase( <include refid="purchaseBaseColumns" /> )
-values(#{purchaseNum},sysdate,#{purchasePrice}
-	  ,#{deliveryAddr},#{deliveryAddrDetail},#{deliveryPost}
-	  ,#{deliveryPhone},#{message},'입금대기중',#{memberNum}
-	  ,#{deliveryName},#{purchaseName})
-</insert>
-<insert id="purchaseListInsert" parameterType="hashmap">
-insert into purchase_list(GOODS_NUM, PURCHASE_NUM, PURCHASE_QTY, GOODS_UNIT_PRICE)
-select c.GOODS_NUM, #{purchaseNum}, CART_QTY , CART_QTY * goods_price
-from cart c join goods g
-on c.goods_num = g.goods_num 
-where member_num = #{memberNum}  
-and c.goods_num in 
-<foreach collection="goodsNums" item="goodsNum" close=")" open="("
-		index="index" separator=",">
-	#{goodsNum}
-</foreach>
-</insert>
-
+	</sql>
+	<select id="selectPurchaseNum" resultType="string">
+		select concat(to_char(sysdate,'yyyyMMdd') , nvl(max(substr(purchase_num,9)),0 ) +1)
+		from purchase
+		where substr(purchase_num,1 ,8) = to_char(sysdate,'yyyyMMdd')
+	</select>
+	<insert id="purchaseInsert" parameterType="purchase" >
+		insert into purchase( <include refid="purchaseBaseColumns" /> )
+		values(#{purchaseNum},sysdate,#{purchasePrice}
+		,#{deliveryAddr},#{deliveryAddrDetail},#{deliveryPost}
+		,#{deliveryPhone},#{message},'입금대기중',#{memberNum}
+		,#{deliveryName},#{purchaseName})
+	</insert>
+	<insert id="purchaseListInsert" parameterType="hashmap">
+		insert into purchase_list(GOODS_NUM, PURCHASE_NUM, PURCHASE_QTY, GOODS_UNIT_PRICE)
+		select c.GOODS_NUM, #{purchaseNum}, CART_QTY , CART_QTY * goods_price
+		from cart c join goods g
+		on c.goods_num = g.goods_num
+		where member_num = #{memberNum}
+		and c.goods_num in
+		<foreach collection="goodsNums" item="goodsNum" close=")" open="("
+				 index="index" separator=",">
+			#{goodsNum}
+		</foreach>
+	</insert>
+	<resultMap type="orderList" id="orderListResultMap">
+		<association property="purchaseDTO" javaType="purchase">
+			<constructor>
+				<idArg column="purchase_Num" javaType="string" />
+				<arg column="purchase_Date" javaType="java.util.Date"/>
+				<arg column="purchase_Price" javaType="integer"/>
+				<arg column="delivery_Addr" javaType="string"/>
+				<arg column="delivery_Addr_Detail" javaType="string"/>
+				<arg column="delivery_Post" javaType="string"/>
+				<arg column="delivery_Phone" javaType="string"/>
+				<arg column="message" javaType="string"/>
+				<arg column="purchase_Status" javaType="string"/>
+				<arg column="member_num" javaType="string"/>
+				<arg column="delivery_name" javaType="string"/>
+				<arg column="purchase_Name" javaType="string"/>
+			</constructor>
+		</association>
+		<collection property="purchaseListGoodsDTOs" ofType="purchaseListGoods">
+			<association property="purchaseListDTO" javaType="purchaseList">
+				<result column="purchase_qty" jdbcType="BIGINT" property="purchaseQty"/>
+				<result column="GOODS_UNIT_PRICE" jdbcType="BIGINT" property="totalPrice"/>
+			</association>
+			<association property="goodsDTO" javaType="goods">
+				<id column="goods_Num" jdbcType="VARCHAR" property="goodsNum"/>
+				<result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+				<result column="GOODS_MAIN_STORE_IMAGE" jdbcType="VARCHAR" property="goodsMainStoreImage"/>
+			</association>
+		</collection>
+	</resultMap>
+	<select id="orderList" parameterType="hashmap" resultMap="orderListResultMap">
+		select  g.goods_num , goods_name, GOODS_MAIN_STORE_IMAGE
+		,GOODS_UNIT_PRICE, PURCHASE_QTY
+		,p.purchase_num , PURCHASE_DATE , PURCHASE_PRICE, DELIVERY_ADDR, DELIVERY_ADDR_DETAIL
+		,DELIVERY_POST, DELIVERY_PHONE, MESSAGE, PURCHASE_STATUS, MEMBER_NUM
+		,DELIVERY_NAME, PURCHASE_NAME
+		from  goods g join purchase_list pl
+		on g.goods_num = pl.goods_num join purchase p
+		on pl.purchase_num = p.purchase_num
+		<trim prefix="where"  prefixOverrides="AND | OR">
+			<if test="memberNum != null">
+				member_num = #{memberNum}
+			</if>
+		</trim>
+	</select>
 
 </mapper>
-
-
-
 
