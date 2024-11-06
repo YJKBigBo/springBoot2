@@ -2,10 +2,8 @@ package springBootMVCShopping.service.purchase;
 import com.inicis.std.util.HttpUtil;
 import com.inicis.std.util.ParseUtil;
 import com.inicis.std.util.SignatureUtil;
-import springBootMVCShopping.model.dao.ItemDAO;
-import springBootMVCShopping.model.dto.PaymentDTO;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -103,19 +101,19 @@ public class INIstdpayPcReturn {
                     // 수신결과를 파싱후 resultCode가 "0000"이면 승인성공 이외 실패
 
                     //throw new Exception("강제 Exception");
-                    PaymentDTO dto = new PaymentDTO();
-                    dto.setApplDate(resultMap.get("applDate"));
-                    dto.setApplTime(resultMap.get("applTime"));
-                    dto.setCardNum(resultMap.get("CARD_Num"));
-                    dto.setConfirmNumber(resultMap.get("applNum"));
-                    dto.setPayMethod(resultMap.get("payMethod"));
-                    dto.setPurchaseNum(resultMap.get("MOID"));
-                    dto.setResultMessage(resultMap.get("resultMsg"));
-                    dto.setTid(resultMap.get("tid"));
-                    dto.setTotalPrice(resultMap.get("TotPrice"));
-                    dto.setPurchaseName(resultMap.get("goodsName"));
-                    ItemDAO dao = new ItemDAO();
-                    dao.paymentInsert(dto);
+//                    PaymentDTO dto = new PaymentDTO();
+//                    dto.setApplDate(resultMap.get("applDate"));
+//                    dto.setApplTime(resultMap.get("applTime"));
+//                    dto.setCardNum(resultMap.get("CARD_Num"));
+//                    dto.setConfirmNumber(resultMap.get("applNum"));
+//                    dto.setPayMethod(resultMap.get("payMethod"));
+//                    dto.setPurchaseNum(resultMap.get("MOID"));
+//                    dto.setResultMessage(resultMap.get("resultMsg"));
+//                    dto.setTid(resultMap.get("tid"));
+//                    dto.setTotalPrice(resultMap.get("TotPrice"));
+//                    dto.setPurchaseName(resultMap.get("goodsName"));
+//                    ItemDAO dao = new ItemDAO();
+//                    dao.paymentInsert(dto);
 
                 } catch (Exception ex) {
 

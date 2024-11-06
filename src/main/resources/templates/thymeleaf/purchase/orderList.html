@@ -16,7 +16,10 @@
 			<td><img th:src="|/static/upload/${PurchaseListGoodsDTO.goodsDTO.goodsMainStoreImage}|" width="30" /></td>
 			<td>[[${PurchaseListGoodsDTO.goodsDTO.goodsName}]]</td>
 		</th:block>
-		<td>[[${orderListDTO.purchaseDTO.purchaseStatus}]]</td>
+		<td>
+			<a th:href="|paymentOk?purchaseNum=${orderListDTO.purchaseDTO.purchaseNum}|">결제하기</a>
+			주문취소
+		</td>
 	</tr>
 </table>
 </body>

@@ -1,18 +1,22 @@
 package springBootMVCShopping.service.purchase;
 
 import com.inicis.std.util.SignatureUtil;
-import jspMVCMisoShopping.model.dao.ItemDAO;
-import jspMVCMisoShopping.model.dto.PurchaseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.stereotype.Service;
+import springBootMVCShopping.domain.PurchaseDTO;
+import springBootMVCShopping.repository.PurchaseRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class IniPayReqService {
-    public void execute(HttpServletRequest request) throws Exception{
-        String purchaseNum = request.getParameter("purchaseNum");
-        ItemDAO  dao = new ItemDAO();
-        PurchaseDTO dto =  dao.purchaseSelectOne(purchaseNum);
+    @Autowired
+    PurchaseRepository purchaseRepository;
+
+    public void execute(String purchaseNum, Model model) throws Exception{
+        PurchaseDTO dto =  purchaseRepository.purchaseSelectOne(purchaseNum);
         String mid					= "INIpayTest";		                    // 상점아이디
         String signKey			    = "SU5JTElURV9UUklQTEVERVNfS0VZU1RS";	// 웹 결제 signkey
 
@@ -31,15 +35,15 @@ public class IniPayReqService {
 
         String signature = SignatureUtil.makeSignature(signParam);
 
-        request.setAttribute("mid", mid);
-        request.setAttribute("orderNumber", orderNumber);
-        request.setAttribute("price", price);
-        request.setAttribute("timestamp", timestamp);
-        request.setAttribute("signature", signature);
-        request.setAttribute("mKey", mKey);
-        request.setAttribute("deliveryName", dto.getDeliveryName());
-        request.setAttribute("purchaseName", dto.getPurchaseName());
-        request.setAttribute("deliveryPhone", dto.getDeliveryPhone());
+        model.addAttribute("mid", mid);
+        model.addAttribute("orderNumber", orderNumber);
+        model.addAttribute("price", price);
+        model.addAttribute("timestamp", timestamp);
+        model.addAttribute("signature", signature);
+        model.addAttribute("mKey", mKey);
+        model.addAttribute("deliveryName", dto.getDeliveryName());
+        model.addAttribute("purchaseName", dto.getPurchaseName());
+        model.addAttribute("deliveryPhone", dto.getDeliveryPhone());
     }
 }
 

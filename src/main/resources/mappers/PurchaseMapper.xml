@@ -77,5 +77,9 @@
 		</trim>
 	</select>
 
+	<select id="purchaseSelectOne" parameterType="string" resultType="purchase">
+		select <include refid="purchaseBaseColumns"></include> from purchase where purchase_num = #{purchaseNum}
+	</select>
+
 </mapper>
 

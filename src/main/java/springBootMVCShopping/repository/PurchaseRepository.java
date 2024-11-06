@@ -33,4 +33,9 @@ public class PurchaseRepository {
 		statement = namespace + ".orderList";
 		return sqlSession.selectList(statement, map);
 	}
+
+	public PurchaseDTO purchaseSelectOne(String purchaseNum){
+		statement = namespace + ".purchaseSelectOne";
+		return sqlSession.selectOne(statement, purchaseNum);
+	}
 }
