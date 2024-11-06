@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="springBootMVCShopping.mapper.HelpMapper">
+    <select id="parseOb" parameterType="FindPwDTO" resultType="string">
+        SELECT 'mem'
+        FROM members
+        WHERE member_id = #{userId}
+          AND (member_phone1 = #{userPhone} OR member_phone2 = #{userPhone})
+        UNION
+        SELECT 'emp'
+        FROM employees
+        WHERE emp_id = #{userId}
+          AND emp_phone = #{userPhone}
+    </select>
+
+    <select id="findPw" parameterType="FindPwDTO" resultType="string">
+        select member_email from members where member_id = #{userId} and (member_phone1 = #{userPhone} or member_phone2 = #{userPhone})
+    </select>
+
+    <update id="PwUpdate" parameterType="string">
+        update members set member_pw = #{encodePw} where member_email = #{email}
+    </update>
+
+    <select id="findId" parameterType="string" resultType="string">
+        select member_id from members where member_email = #{userEmail} and (member_phone1 = #{userPhone} or member_phone2 = #{userPhone})
+    </select>
+
+    <update id="pwUdate" parameterType="FindPwDTO">
+        update ${tableName}
+        set ${pwColumName} = #{userPw}
+        where ${userIdColumName} = #{userId}
+        and ${phoneColumn} = #{userPhone}
+    </update>
+</mapper>
